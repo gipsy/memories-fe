@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from 'react-file-base64';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useStyles from './styles';
@@ -8,7 +9,6 @@ import { createPost, updatePost } from "../../actions/posts";
 
 const Form = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = useState({
-    creator: '',
     title: '',
     message: '',
     tags: [],
@@ -17,8 +17,11 @@ const Form = ({ currentId, setCurrentId }) => {
   const post = useSelector((state) => currentId
     ? state.posts.find((p) => p._id === currentId)
     : null);
+
   const classes = useStyles();
   const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem('profile'));
+  const history = useHistory();
 
   useEffect(() => {
     if (post) setPostData(post);
@@ -27,18 +30,27 @@ const Form = ({ currentId, setCurrentId }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    if (currentId) {
-      dispatch(updatePost(currentId, postData));
+    if (currentId === 0) {
+      dispatch(createPost({ ...postData, name: user?.userInfo?.name }, history));
     } else {
-      dispatch(createPost(postData));
+      dispatch(updatePost(currentId, { ...postData, name: user?.userInfo?.name }));
     }
-
     clear();
+  };
+
+  if (!user?.userInfo?.name) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h6" align="center">
+          Please Sign In to create your own memories and like other's memories.
+        </Typography>
+      </Paper>
+    )
   }
 
   const clear = () => {
-    setCurrentId(null);
-    setPostData({ creator: '', title: '', message: '', tags: [], selectedFile: '' });
+    setCurrentId(0);
+    setPostData({ title: '', message: '', tags: [], selectedFile: '' });
   }
 
   return (
@@ -50,14 +62,6 @@ const Form = ({ currentId, setCurrentId }) => {
         noValidate
       >
         <Typography variant="h6">{currentId ? 'Editing' : 'Creating'} a memory</Typography>
-        <TextField
-          onChange={(e) => setPostData({ ...postData, creator: e.target.value })}
-          value={postData.creator}
-          name="creator"
-          variant="outlined"
-          label="Creator"
-          fullWidth
-        />
         <TextField
           onChange={(e) => setPostData({ ...postData, title: e.target.value })}
           value={postData.title}

@@ -49,13 +49,11 @@ const Auth = () => {
   }
 
   const googleLogin = useGoogleLogin({
-    onSuccess: async tokenResponse => {
-      const token = tokenResponse.access_token;
-      const userInfo = await axios
-      .get('https://www.googleapis.com/oauth2/v3/userinfo', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(res => res.data);
+    flow: 'auth-code',
+    onSuccess: async ({ code }) => {
+      const { userInfo, token } = await axios
+        .post('http://localhost:5000/user/signin', { googleCode: code })
+        .then(res => res.data);
 
       try {
         dispatch({ type: 'AUTH', data: { userInfo, token } });
