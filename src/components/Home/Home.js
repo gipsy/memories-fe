@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Container, Grow, Grid, Paper, AppBar, TextField, Button } from "@material-ui/core";
 import Posts from "../Posts/Posts";
 import Form from "../Form/Form";
 import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from 'react-router-dom';
 import ChipInput from 'material-ui-chip-input';
-import { getPosts, getPostsBySearch } from "../../actions/posts";
+import { getPostsBySearch } from "../../actions/posts";
 import Pagination from '../Pagination';
 import useStyles from './styles';
 
@@ -20,15 +20,11 @@ const Home = () => {
   const dispatch = useDispatch();
   const query = useQuery();
   const history = useHistory();
-  const page = query.get('page') || 1;
+  const page = Number(query.get('page')) || 1;
   const searchQuery = query.get('searchQuery');
   const classes = useStyles();
 
-  useEffect(() => {
-    dispatch(getPosts());
-  }, [currentId, dispatch]);
-
-  const searchPost = (searchQuery) => {
+  const searchPost = () => {
     if (search.trim() || tags) {
       dispatch(getPostsBySearch({ search, tags: tags.join(',') }));
       history.push(`/posts/search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
@@ -71,7 +67,7 @@ const Home = () => {
                 label="Search Memories"
                 fullWidth
                 value={search}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
                 onChange={(e) => setSearch(e.target.value)}
               />
               <ChipInput
@@ -85,9 +81,11 @@ const Home = () => {
               <Button onClick={searchPost} className={classes.searchButton} variant="contained" color="primary">Search</Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
-            <Paper elevation={6}>
-              <Pagination />
-            </Paper>
+            {(!searchQuery && !tags.length) && (
+              <Paper elevation={6} className={classes.pagination}>
+                <Pagination page={page} />
+              </Paper>
+            )}
           </Grid>
         </Grid>
       </Container>
