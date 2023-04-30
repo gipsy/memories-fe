@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardActions, CardContent, CardMedia, Button, ButtonBase, Typography } from "@material-ui/core";
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ThumbUpAltOutlined from '@material-ui/icons/ThumbUpAltOutlined';
@@ -17,16 +17,29 @@ const Post = ({ post, setCurrentId }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const user = JSON.parse(localStorage.getItem('profile'));
+  const [likes, setLikes] = useState(post?.likes);
+
+  const userId = user?.userInfo?.sub || user?.userInfo?._id;
+  const hasLikedPost = post.likes.find((like) => like === userId);
+
+  const handleLike = async () => {
+    dispatch(likePost(post._id))
+    if (hasLikedPost) {
+      setLikes(post.likes.filter((id) => id !== userId));
+    } else {
+      setLikes([...post.likes, userId]);
+    }
+  }
 
   const Likes = () => {
-    if (post?.likes?.length > 0) {
-      return post.likes.find((like) => like === (user?.userInfo?.sub || user?.userInfo?._id))
+    if (likes.length > 0) {
+      return hasLikedPost
         ? (
-          <><ThumbUpAltIcon fontSize="small" />&nbsp;{post.likes.length > 2
-            ? `You and ${post.likes.length - 1} others`
-            : `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}` }</> )
+          <><ThumbUpAltIcon fontSize="small" />&nbsp;{likes.length > 2
+            ? `You and ${likes.length - 1} others`
+            : `${likes.length} like${likes.length > 1 ? 's' : ''}` }</> )
         : (
-          <><ThumbUpAltOutlined fontSize="small" />&nbsp;{post.likes.length} {post.likes.length === 1
+          <><ThumbUpAltOutlined fontSize="small" />&nbsp;{likes.length} {likes.length === 1
             ? 'Like'
             : 'Likes'}</> );
     }
@@ -79,7 +92,7 @@ const Post = ({ post, setCurrentId }) => {
 
       <CardActions className={classes.cardActions}>
         <Button
-          onClick={() => dispatch(likePost(post._id))}
+          onClick={handleLike}
           size="small"
           color="primary"
         >
