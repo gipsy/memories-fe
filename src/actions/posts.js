@@ -1,8 +1,10 @@
 import {
   FETCH_ALL,
+  FETCH_POST,
   FETCH_BY_SEARCH,
   CREATE,
   UPDATE,
+  COMMENT,
   DELETE,
   START_LOADING,
   END_LOADING,
@@ -10,12 +12,23 @@ import {
 import * as api from '../api';
 
 // Action Creators
+export const getPost = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: START_LOADING });
+    const { data } = await api.fetchPost(id);
+
+    dispatch({ type: FETCH_POST, payload: data })
+    dispatch({ type: END_LOADING });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export const getPosts = (page) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
     const { data: { data, currentPage, numberOfPages } } = await api.fetchPosts(page);
 
-    console.log('action getPosts')
     dispatch({ type: FETCH_ALL, payload: { data, currentPage, numberOfPages } })
     dispatch({ type: END_LOADING });
   } catch (error) {
@@ -72,6 +85,18 @@ export const likePost = (id) => async (dispatch) => {
     const { data } = await api.likePost(id);
 
     dispatch ({ type: UPDATE, payload: data })
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const commentPost = (value, id) => async (dispatch) => {
+  try {
+    const { data } = await api.comment(value, id);
+
+    dispatch({ type: COMMENT, payload: data });
+
+    return data.comments;
   } catch (error) {
     console.log(error);
   }

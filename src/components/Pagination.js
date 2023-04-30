@@ -13,8 +13,6 @@ const Paginate = ({ page }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('check page var type')
-    console.log(typeof page);
     if (page) dispatch(getPosts(page));
   }, [page])
 

@@ -15,8 +15,6 @@ const Form = ({ currentId, setCurrentId }) => {
     selectedFile: '',
   })
   const post = useSelector((state) => {
-    console.log('Form check state')
-    console.log(state)
     return currentId ? state.posts.posts.find((p) => p._id === currentId) : null
   });
 
