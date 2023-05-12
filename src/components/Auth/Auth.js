@@ -51,8 +51,9 @@ const Auth = () => {
   const googleLogin = useGoogleLogin({
     flow: 'auth-code',
     onSuccess: async ({ code }) => {
+      // #TODO add .env config
       const { userInfo, token } = await axios
-        .post('http://localhost:5000/user/signin', { googleCode: code })
+        .post('https://memories-hlg7.onrender.com/user/signin', { googleCode: code })
         .then(res => res.data);
 
       try {
