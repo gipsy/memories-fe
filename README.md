@@ -1,9 +1,6 @@
-# memories-fe Source Code link
-Here is Backend (Node/Express) [https://github.com/gipsy/memories-be](https://github.com/gipsy/memories-be)
+# memories-be source
+Here is server (Node/Express) [https://github.com/gipsy/memories-be](https://github.com/gipsy/memories-be)
 
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
