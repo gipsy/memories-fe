@@ -1,4 +1,4 @@
-# Sync in Render Dashboard: New > Blueprint, or Settings > Blueprint for this repo.
+# Optional: link repo as a Blueprint to keep routes in sync with Render.
 services:
   - type: web
     name: memories-client
