@@ -12,8 +12,7 @@
 /build
 dist
 
-# local npm / env (copy .npmrc.example → .npmrc)
-.npmrc
+# local overrides (.npmrc is committed for Render/npm install)
 .nvmrc
 .env
 .env.local
