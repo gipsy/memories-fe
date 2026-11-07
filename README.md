@@ -21,9 +21,10 @@ API and persistence live in the sibling backend: [memories-be](https://github.co
 ## Setup
 
 ```bash
-cp .npmrc.example .npmrc   # legacy-peer-deps for Material UI v4 + React 18
 npm install
 ```
+
+Committed `.npmrc` sets `legacy-peer-deps=true` (Material UI v4 + React 18). **Render runs `npm install` before your build command**, so this file must be in the repo—not only in the build script.
 
 From the monorepo root, run `./scripts/pull-render-env.sh` to create `.env.development.local` with `VITE_API_URL` and `VITE_GOOGLE_CLIENT_ID` (synced from the Render **memories** API). Vite loads that file for `npm start`.
 
@@ -37,6 +38,13 @@ Optional manual copy: see `.env.example`. API calls use `VITE_API_URL` (default 
 | `npm run build` | Production build in `build/` (gitignored; Render runs this on deploy) |
 | `npm run preview` | Serve production build locally |
 
+## Deploy (Render static site)
+
+- **Build command:** `npm run build`
+- **Publish directory:** `build`
+- **Env at build time:** `.env.production` (committed `VITE_*` values)
+- **SPA:** rewrite `/*` → `/index.html` (see `render.yaml`)
+
 ## Features (UI)
 
 - **Feed** — paginated list of posts
@@ -47,4 +55,4 @@ Optional manual copy: see `.env.example`. API calls use `VITE_API_URL` (default 
 
 ## Security / dependencies
 
-The app was migrated from Create React App to **Vite** so `npm audit` stays clean (no `react-scripts` / webpack toolchain). React 18 is used with Material UI v4 via `legacy-peer-deps` (local `.npmrc` from `.npmrc.example`, not committed).
+The app was migrated from Create React App to **Vite** so `npm audit` stays clean (no `react-scripts` / webpack toolchain). React 18 is used with Material UI v4 via `legacy-peer-deps` (`.npmrc` + `installConfig` in `package.json`).
