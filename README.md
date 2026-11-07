@@ -1,70 +1,50 @@
-# memories-be source
-Here is server (Node/Express) [https://github.com/gipsy/memories-be](https://github.com/gipsy/memories-be)
+# Memories — frontend
 
+React single-page app for **Memories**, a social board for sharing personal posts: titles, stories, photos, tags, likes, and comments. Users can sign in with email/password or Google OAuth, browse a paginated feed, search by text and tags, create or edit their posts, and open a detail view for comments.
 
-## Available Scripts
+## Stack
 
-In the project directory, you can run:
+- React 16, Redux (thunk), React Router v5
+- Material UI v4
+- Axios client talking to the Memories REST API
+- Vite 6
 
-### `npm start`
+## Related repo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+API and persistence live in the sibling backend: [memories-be](https://github.com/gipsy/memories-be).
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Prerequisites
 
-### `npm test`
+- Node.js 20+ (Node 26 works)
+- npm
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Setup
 
-### `npm run build`
+```bash
+cp .npmrc.example .npmrc   # legacy-peer-deps for Material UI v4 + React 18
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+From the monorepo root, run `./scripts/pull-render-env.sh` to create `.env.development.local` with `VITE_API_URL` and `VITE_GOOGLE_CLIENT_ID` (synced from the Render **memories** API). Vite loads that file for `npm start`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Optional manual copy: see `.env.example`. API calls use `VITE_API_URL` (default `http://localhost:5000`) — do not proxy `/posts` in Vite or client-side routes will return JSON instead of the SPA.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Scripts
 
-### `npm run eject`
+| Command | Description |
+|--------|-------------|
+| `npm start` | Dev server at [http://localhost:3000](http://localhost:3000) |
+| `npm run build` | Production build in `build/` (gitignored; Render runs this on deploy) |
+| `npm run preview` | Serve production build locally |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Features (UI)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Feed** — paginated list of posts
+- **Search** — filter by title text and tag chips
+- **Create / edit** — form with optional base64 image upload
+- **Post detail** — likes and comment thread
+- **Auth** — sign up, sign in, Google OAuth; JWT stored in `localStorage`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Security / dependencies
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The app was migrated from Create React App to **Vite** so `npm audit` stays clean (no `react-scripts` / webpack toolchain). React 18 is used with Material UI v4 via `legacy-peer-deps` (local `.npmrc` from `.npmrc.example`, not committed).
