@@ -6,6 +6,9 @@
     "node": ">=20.0.0",
     "npm": ">=10.0.0"
   },
+  "installConfig": {
+    "legacyPeerDeps": true
+  },
   "scripts": {
     "dev": "vite",
     "start": "vite",

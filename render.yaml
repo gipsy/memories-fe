@@ -1,0 +1,20 @@
+# Optional: link repo as a Blueprint to keep routes in sync with Render.
+services:
+  - type: web
+    name: memories-client
+    runtime: static
+    repo: https://github.com/gipsy/memories-fe
+    branch: main
+    buildCommand: npm run build
+    staticPublishPath: ./build
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: VITE_API_URL
+        value: https://memories-hlg7.onrender.com
+      - key: VITE_GOOGLE_CLIENT_ID
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
