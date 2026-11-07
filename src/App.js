@@ -8,10 +8,19 @@ import Auth from './components/Auth/Auth';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import PostDetails from "./components/PostDetails/PostDetails";
 
+const readStoredUser = () => {
+  try {
+    const raw = localStorage.getItem('profile');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
 const App = () => {
-  const user = JSON.parse(localStorage.getItem('profile'));
+  const user = readStoredUser();
   return (
-    <GoogleOAuthProvider clientId="88596898393-nro5iq8g2la7bjk1tpa3u0j985r6p0be.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <BrowserRouter>
         <Container maxWidth="xl">
           <Navbar />

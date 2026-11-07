@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from "axios";
+import { API_BASE_URL } from '../../api';
 import {
   Avatar,
   Button,
@@ -51,10 +51,12 @@ const Auth = () => {
   const googleLogin = useGoogleLogin({
     flow: 'auth-code',
     onSuccess: async ({ code }) => {
-      // #TODO add .env config
-      const { userInfo, token } = await axios
-        .post('https://memories-hlg7.onrender.com/user/signin', { googleCode: code })
-        .then(res => res.data);
+      const response = await fetch(`${API_BASE_URL}/user/signin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ googleCode: code }),
+      });
+      const { userInfo, token } = await response.json();
 
       try {
         dispatch({ type: 'AUTH', data: { userInfo, token } });
